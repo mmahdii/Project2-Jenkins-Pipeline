@@ -10,9 +10,14 @@ pipeline {
         }
         stage("Deploy"){
             steps {
-                sh "docker rm -f $(docker ps -qa)"
-                sh "docker run -dit --name node-app -p 3000:3000 node-app:$BUILD_NUMBER"
+                sh '''
+                docker rm -f $(docker ps -qa)
+                echo "Cleanup done!"
                 echo "Deploying ..."
+                docker run -dit --name node-app -p 3000:3000 node-app:$BUILD_NUMBER
+                docker ps -qa
+                '''
+                
             }
         }
     }
