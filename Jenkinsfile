@@ -15,7 +15,7 @@ pipeline {
                 echo "Cleanup done!"
                 echo "Deploying ..."
                 docker run -dit --name node-app -p 3000:3000 node-app:$BUILD_NUMBER
-                docker ps -qa
+                docker ps
                 '''
                 
             }
