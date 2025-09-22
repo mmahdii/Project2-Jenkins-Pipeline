@@ -9,6 +9,9 @@ pipeline {
             }
         }
         stage("Deploy"){
+            when {
+                branch 'main'
+            }
             steps {
                 sh '''
                 docker rm -f $(docker ps -qa)
