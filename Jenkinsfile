@@ -37,6 +37,18 @@ pipeline {
     }
 
 post { 
+    always {
+        echo 'Pipeline finished. Sending notification...'
+        mail(
+            bcc: '',
+            body: "Pipeline finished for Build #${BUILD_NUMBER}.",
+            cc: '',
+            from: 'jenkins@example.local',
+            replyTo: '',
+            subject: "Pipeline Notification - Build #${BUILD_NUMBER}",
+            to: 'mahdi@example.local'
+        )
+    }
     success {
         echo 'Build and Deploy completed successfully!'
         mail(
