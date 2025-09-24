@@ -36,20 +36,47 @@ pipeline {
 
     }
 
-    post { 
-        always { 
-            echo 'Pipeline finished. Sending notification...'
-            mail(
-                bcc: '',
-                body: 'An error occurred during the build or deploy process.',
-                cc: '',
-                from: 'jenkins@example.local',
-                replyTo: '',
-                subject: "Pipeline Notification - Build #${BUILD_NUMBER}",
-                to: 'mahdi@example.local'
-            )
-        }
+post { 
+    success {
+        echo 'Build and Deploy completed successfully!'
+        mail(
+            bcc: '',
+            body: "Pipeline succeeded for Build #${BUILD_NUMBER}.",
+            cc: '',
+            from: 'jenkins@example.local',
+            replyTo: '',
+            subject: "SUCCESS - Build #${BUILD_NUMBER}",
+            to: 'mahdi@example.local'
+        )
     }
+
+    failure {
+        echo 'Pipeline failed!'
+        mail(
+            bcc: '',
+            body: "Pipeline failed during Build #${BUILD_NUMBER}. Please check the logs.",
+            cc: '',
+            from: 'jenkins@example.local',
+            replyTo: '',
+            subject: "FAILURE - Build #${BUILD_NUMBER}",
+            to: 'mahdi@example.local'
+        )
+    }
+
+    aborted {
+        echo 'Pipeline was aborted!'
+        mail(
+            bcc: '',
+            body: "Pipeline was aborted for Build #${BUILD_NUMBER}.",
+            cc: '',
+            from: 'jenkins@example.local',
+            replyTo: '',
+            subject: "ABORTED - Build #${BUILD_NUMBER}",
+            to: 'mahdi@example.local'
+        )
+    }
+}
+
 
 
 }
