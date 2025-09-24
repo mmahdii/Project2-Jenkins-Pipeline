@@ -2,11 +2,16 @@ pipeline {
     agent {
         label 'slave-02-tag'
     } 
+    environment {
+        APP_NAME = "node-app"
+        APP_PORT = 3000
+        DOCKER_IMAGE = "${APP_NAME}:${BUILD_NUMBER}"
+    }
     stages{
         stage("Build"){
             steps {
-            
-                sh "docker build -t node-app:$BUILD_NUMBER . "
+                echo "Building Docker image: ${DOCKER_IMAGE}"
+                sh "docker build -t $DOCKER_IMAGE . "
             }
         }
         stage("Deploy"){
@@ -14,13 +19,17 @@ pipeline {
                 branch 'main'
             }
             steps {
-                sh '''
-                docker rm -f $(docker ps -qa)
+                echo "Stopping and removing any existing containers..."
+                                sh '''
+                docker rm -f $(docker ps -qa --filter "name=${APP_NAME}") || true
                 echo "Cleanup done!"
-                echo "Deploying ..."
-                docker run -dit --name node-app -p 3000:3000 node-app:$BUILD_NUMBER
-                docker ps
                 '''
+
+                echo "Deploying Docker container..."
+                sh "docker run -dit --name ${APP_NAME} -p ${APP_PORT}:${APP_PORT} ${DOCKER_IMAGE}"
+                
+                echo "Current running containers:"
+                sh "docker ps --filter 'name=${APP_NAME}'" 
                 
             }
         }
@@ -29,8 +38,16 @@ pipeline {
 
     post { 
         always { 
-            echo 'I will always say Hello again!'
-            mail bcc: '', body: 'error happend', cc: '', from: 'jenkins@example.local', replyTo: '', subject: "Failure - BuildNumber: $BUILD_NUMBER", to: 'mahdi@example.local'
+            echo 'Pipeline finished. Sending notification...'
+            mail(
+                bcc: '',
+                body: 'An error occurred during the build or deploy process.',
+                cc: '',
+                from: 'jenkins@example.local',
+                replyTo: '',
+                subject: "Pipeline Notification - Build #${BUILD_NUMBER}",
+                to: 'mahdi@example.local'
+            )
         }
     }
 
