@@ -5,6 +5,7 @@ pipeline {
     stages{
         stage("Build"){
             steps {
+                sh "docker rmi"
                 sh "docker build -t node-app:$BUILD_NUMBER . "
             }
         }
@@ -23,5 +24,14 @@ pipeline {
                 
             }
         }
+
     }
+
+    post { 
+        always { 
+            echo 'I will always say Hello again!'
+        }
+    }
+
+
 }
