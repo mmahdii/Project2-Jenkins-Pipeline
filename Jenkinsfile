@@ -5,7 +5,7 @@ pipeline {
     stages{
         stage("Build"){
             steps {
-                sh "docker rmi"
+            
                 sh "docker build -t node-app:$BUILD_NUMBER . "
             }
         }
