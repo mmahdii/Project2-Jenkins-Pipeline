@@ -19,7 +19,7 @@ pipeline {
                 branch 'main'
             }
             steps {
-                echo "Stopping and removing any existing containers..."
+                echo "Stopping and removing any existing containers ..."
                                 sh '''
                 docker rm -f $(docker ps -qa --filter "name=${APP_NAME}") || true
                 echo "Cleanup done!"
