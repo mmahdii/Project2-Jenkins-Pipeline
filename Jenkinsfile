@@ -30,7 +30,7 @@ pipeline {
     post { 
         always { 
             echo 'I will always say Hello again!'
-            mail bcc: '', body: 'error happend', cc: '', from: 'jenkins@example.local', replyTo: '', subject: 'Failure - BuildNumber: $BUILD_NUMBER', to: 'mahdi@example.local'
+            mail bcc: '', body: 'error happend', cc: '', from: 'jenkins@example.local', replyTo: '', subject: "Failure - BuildNumber: $BUILD_NUMBER", to: 'mahdi@example.local'
         }
     }
 
