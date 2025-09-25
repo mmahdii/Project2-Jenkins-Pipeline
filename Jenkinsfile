@@ -33,12 +33,13 @@ pipeline {
             steps {
                 echo "Stopping and removing existing containers..."
                 sh """
-                    docker rmi -f \$(docker image ls -q) || true
+                    docker rm -f \$(docker ps -qa --filter "name=${APP_NAME}") || true
                     echo "Cleanup done!"
                 """
 
                 echo "Deploying Docker container..."
                 sh """
+                    docker rmi -f \$(docker image ls -q) || true
                     docker logout ${NEXUS_HOSTED_DOCKER_REPO_URL}
                     docker login ${NEXUS_HOSTED_DOCKER_REPO_URL} -u ${NEXUS_CREDENTIAL_USER} -p ${NEXUS_CREDENTIAL_PASSWORD}              
                     docker pull ${NEXUS_HOSTED_DOCKER_REPO_URL}/${DOCKER_IMAGE}
