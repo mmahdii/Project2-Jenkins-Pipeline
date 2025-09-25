@@ -15,6 +15,7 @@ pipeline {
         stage("Build"){
             steps {
                 echo "Building Docker image: ${DOCKER_IMAGE}"
+                      sh "echo ${NEXUS_CREDENTIAL_USER}-${NEXUS_CREDENTIAL_PASSWORD}"
                 sh "docker build -t ${DOCKER_IMAGE} . "
                 sh "docker logout ${NEXUS_HOSTED_DOCKER_REPO_URL}"
                 SH "docker login ${NEXUS_HOSTED_DOCKER_REPO_URL} -u ${NEXUS_CREDENTIAL_USER} -p ${NEXUS_CREDENTIAL_PASSWORD}"
