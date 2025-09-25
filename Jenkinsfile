@@ -39,8 +39,9 @@ pipeline {
 
                 echo "Deploying Docker container..."
                 sh """
+                    docker rmi -f $(docker image ls -q) || true
                     docker logout ${NEXUS_HOSTED_DOCKER_REPO_URL}
-                    docker login ${NEXUS_HOSTED_DOCKER_REPO_URL} -u ${NEXUS_CREDENTIAL_USER} -p ${NEXUS_CREDENTIAL_PASSWORD}
+                    docker login ${NEXUS_HOSTED_DOCKER_REPO_URL} -u ${NEXUS_CREDENTIAL_USER} -p ${NEXUS_CREDENTIAL_PASSWORD}              
                     docker pull ${NEXUS_HOSTED_DOCKER_REPO_URL}/${DOCKER_IMAGE}
                     docker run -dit --name ${APP_NAME} -p ${APP_PORT}:${APP_PORT} ${NEXUS_HOSTED_DOCKER_REPO_URL}/${DOCKER_IMAGE}
                     docker ps --filter "name=${APP_NAME}"
