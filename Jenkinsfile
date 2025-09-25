@@ -6,27 +6,39 @@ pipeline {
         APP_NAME = "node-app"
         APP_PORT = 3000
         DOCKER_IMAGE = "${APP_NAME}:${BUILD_NUMBER}"
+        NEXUS_HOSTED_DOCKER_REPO_URL = "192.168.4.142:8082" 
+        NEXUS_CREDENTIAL_USER="anisa"
+        NEXUS_CREDENTIAL_PASSWORD="qazwsx"
+
     }
     stages{
         stage("Build"){
             steps {
                 echo "Building Docker image: ${DOCKER_IMAGE}"
-                sh "docker build -t $DOCKER_IMAGE . "
+                sh "docker build -t ${DOCKER_IMAGE} . "
+                sh "docker logout ${NEXUS_HOSTED_DOCKER_REPO_URL}"
+                SH "docker login ${NEXUS_HOSTED_DOCKER_REPO_URL} -u ${NEXUS_CREDENTIAL_USER} -p ${NEXUS_CREDENTIAL_PASSWORD} "
+                sh "docker tag ${DOCKER_IMAGE $NEXUS_HOSTED_DOCKER_REPO_URL}/${DOCKER_IMAGE}"
+                sh "docker push ${NEXUS_HOSTED_DOCKER_REPO_URL}/${DOCKER_IMAGE}"
             }
-        }
+        } 
         stage("Deploy"){
             when {
                 branch 'main'
             }
             steps {
                 echo "Stopping and removing any existing containers ..."
-                                sh '''
+                sh '''
                 docker rm -f $(docker ps -qa --filter "name=${APP_NAME}") || true
                 echo "Cleanup done!"
                 '''
 
                 echo "Deploying Docker container..."
-                sh "docker run -dit --name ${APP_NAME} -p ${APP_PORT}:${APP_PORT} ${DOCKER_IMAGE}"
+                sh "docker logout ${NEXUS_HOSTED_DOCKER_REPO_URL}"
+                SH "docker login ${NEXUS_HOSTED_DOCKER_REPO_URL} -u ${NEXUS_CREDENTIAL_USER} -p ${NEXUS_CREDENTIAL_PASSWORD} "
+
+                sh "docker pull ${NEXUS_HOSTED_DOCKER_REPO_URL}/${DOCKER_IMAGE}"
+                sh "docker run -dit --name ${APP_NAME} -p ${APP_PORT}:${APP_PORT} ${NEXUS_HOSTED_DOCKER_REPO_URL}/${DOCKER_IMAGE}"
                 
                 echo "Current running containers:"
                 sh "docker ps --filter 'name=${APP_NAME}'" 
