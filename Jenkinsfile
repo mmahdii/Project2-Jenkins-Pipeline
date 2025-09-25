@@ -39,7 +39,7 @@ pipeline {
 
                 echo "Deploying Docker container..."
                 sh """
-                    docker rmi -f $(docker image ls -q) || true
+                    docker rmi -f \$(docker image ls -q) || true
                     docker logout ${NEXUS_HOSTED_DOCKER_REPO_URL}
                     docker login ${NEXUS_HOSTED_DOCKER_REPO_URL} -u ${NEXUS_CREDENTIAL_USER} -p ${NEXUS_CREDENTIAL_PASSWORD}              
                     docker pull ${NEXUS_HOSTED_DOCKER_REPO_URL}/${DOCKER_IMAGE}
