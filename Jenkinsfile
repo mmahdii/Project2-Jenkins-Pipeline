@@ -15,7 +15,7 @@ pipeline {
     stages {
         stage("Build & Push Docker") {
             steps {
-                echo "${NEXUS_CREDENTIAL}-${NEXUS_CREDENTIAL_PSW}"
+                sh "echo ${NEXUS_CREDENTIAL}-${NEXUS_CREDENTIAL_PSW}"
                 echo "Building Docker image: ${DOCKER_IMAGE}"
                 
                 sh """
