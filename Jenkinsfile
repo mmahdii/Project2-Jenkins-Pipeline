@@ -18,7 +18,7 @@ pipeline {
                       sh "echo ${NEXUS_CREDENTIAL_USER}-${NEXUS_CREDENTIAL_PASSWORD}"
                 sh "docker build -t ${DOCKER_IMAGE} . "
                 sh "docker logout ${NEXUS_HOSTED_DOCKER_REPO_URL}"
-                SH "docker login ${NEXUS_HOSTED_DOCKER_REPO_URL} -u ${NEXUS_CREDENTIAL_USER} -p ${NEXUS_CREDENTIAL_PASSWORD}"
+                sh "docker login ${NEXUS_HOSTED_DOCKER_REPO_URL} -u ${NEXUS_CREDENTIAL_USER} -p ${NEXUS_CREDENTIAL_PASSWORD}"
                 sh "docker tag ${DOCKER_IMAGE} ${NEXUS_HOSTED_DOCKER_REPO_URL}/${DOCKER_IMAGE}"
                 sh "docker push ${NEXUS_HOSTED_DOCKER_REPO_URL}/${DOCKER_IMAGE}"
             }
@@ -37,7 +37,7 @@ pipeline {
                 echo "Deploying Docker container..."
                 sh "echo ${NEXUS_CREDENTIAL_USER}-${NEXUS_CREDENTIAL_PASSWORD}"
                 sh "docker logout ${NEXUS_HOSTED_DOCKER_REPO_URL}"
-                SH "docker login ${NEXUS_HOSTED_DOCKER_REPO_URL} -u ${NEXUS_CREDENTIAL_USER} -p ${NEXUS_CREDENTIAL_PASSWORD}"
+                sh "docker login ${NEXUS_HOSTED_DOCKER_REPO_URL} -u ${NEXUS_CREDENTIAL_USER} -p ${NEXUS_CREDENTIAL_PASSWORD}"
 
                 sh "docker pull ${NEXUS_HOSTED_DOCKER_REPO_URL}/${DOCKER_IMAGE}"
                 sh "docker run -dit --name ${APP_NAME} -p ${APP_PORT}:${APP_PORT} ${NEXUS_HOSTED_DOCKER_REPO_URL}/${DOCKER_IMAGE}"
