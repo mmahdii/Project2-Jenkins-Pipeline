@@ -18,7 +18,7 @@ pipeline {
                 sh "docker build -t ${DOCKER_IMAGE} . "
                 sh "docker logout ${NEXUS_HOSTED_DOCKER_REPO_URL}"
                 SH "docker login ${NEXUS_HOSTED_DOCKER_REPO_URL} -u ${NEXUS_CREDENTIAL_USER} -p ${NEXUS_CREDENTIAL_PASSWORD} "
-                sh "docker tag ${DOCKER_IMAGE $NEXUS_HOSTED_DOCKER_REPO_URL}/${DOCKER_IMAGE}"
+                sh "docker tag ${DOCKER_IMAGE} ${NEXUS_HOSTED_DOCKER_REPO_URL}/${DOCKER_IMAGE}"
                 sh "docker push ${NEXUS_HOSTED_DOCKER_REPO_URL}/${DOCKER_IMAGE}"
             }
         } 
