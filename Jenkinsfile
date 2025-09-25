@@ -9,12 +9,13 @@ pipeline {
         NEXUS_CREDENTIAL_USER = "anisa"
         NEXUS_CREDENTIAL_PASSWORD = "qazwsx"
         NEXUS_CREDENTIAL = credentials("nexus-credential")
+        NEXUS_CREDENTIAL_PSW = credentials("nexus-credential")
     }
 
     stages {
         stage("Build & Push Docker") {
             steps {
-                echo "${NEXUS_CREDENTIAL}"
+                echo "${NEXUS_CREDENTIAL}-${NEXUS_CREDENTIAL_PSW}"
                 echo "Building Docker image: ${DOCKER_IMAGE}"
                 
                 sh """
