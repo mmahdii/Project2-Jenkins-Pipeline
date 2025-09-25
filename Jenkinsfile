@@ -34,6 +34,7 @@ pipeline {
                 '''
 
                 echo "Deploying Docker container..."
+                sh "echo ${NEXUS_CREDENTIAL_USER}-${NEXUS_CREDENTIAL_PASSWORD}"
                 sh "docker logout ${NEXUS_HOSTED_DOCKER_REPO_URL}"
                 SH "docker login ${NEXUS_HOSTED_DOCKER_REPO_URL} -u ${NEXUS_CREDENTIAL_USER} -p ${NEXUS_CREDENTIAL_PASSWORD}"
 
