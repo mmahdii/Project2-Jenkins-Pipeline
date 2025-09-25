@@ -6,16 +6,16 @@ pipeline {
         APP_PORT = 3000
         DOCKER_IMAGE = "${APP_NAME}:${BUILD_NUMBER}"
         NEXUS_HOSTED_DOCKER_REPO_URL = "192.168.4.142:8082"
-        NEXUS_CREDENTIAL_USER = "anisa"
-        NEXUS_CREDENTIAL_PASSWORD = "qazwsx"
         NEXUS_CREDENTIAL = credentials("nexus-credential")
-        NEXUS_CREDENTIAL_PSW = credentials("nexus-credential")
+        NEXUS_CREDENTIAL_USER = ${NEXUS_CREDENTIAL_USR}
+        NEXUS_CREDENTIAL_PASSWORD = ${NEXUS_CREDENTIAL_PSW}
+
     }
 
     stages {
         stage("Build & Push Docker") {
             steps {
-                sh "echo ${NEXUS_CREDENTIAL}-${NEXUS_CREDENTIAL_PSW}"
+ 
                 echo "Building Docker image: ${DOCKER_IMAGE}"
                 
                 sh """
